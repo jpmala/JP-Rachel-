@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rachel ❤️ My Valentine</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  font-family: 'Pacifico', cursive;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #ffafbd, #ffc3a0);
+  overflow: hidden;
+}
+
+/* Hearts & sparkles */
+.heart {
+  position: absolute;
+  font-size: 20px;
+  animation: float 7s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(110vh) rotate(0deg); opacity: 1; }
+  to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+.container {
+  text-align: center;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 20px;
+}
+
+h1 {
+  font-size: clamp(2.2rem, 6vw, 3.5rem);
+  color: white;
+  text-shadow: 2px 2px 10px #ff4d6d;
+}
+
+.buttons {
+  position: relative;
+  height: 220px;
+  margin-top: 30px;
+}
+
+button {
+  font-size: 1.8rem;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  position: absolute;
+  transition: 0.3s ease;
+}
+
+#yes {
+  background: #ff4d6d;
+  color: white;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.15); }
+  100% { transform: translateX(-50%) scale(1); }
+}
+
+#no {
+  background: white;
+  color: #ff4d6d;
+  top: 110px;
+  left: 20%;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+#celebration {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 10;
+  text-align: center;
+  color: white;
+  padding-top: 50px;
+}
+
+#celebration img {
+  width: 70%;
+  max-width: 260px;
+  border-radius: 20px;
+  margin-top: 20px;
+  animation: zoom 1.2s ease;
+  box-shadow: 0 0 30px pink;
+}
+
+@keyframes zoom {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+  <h1>Rachel 💖<br>Will you be my Valentine?</h1>
+  <div class="buttons">
+    <button id="yes">Yes 💋</button>
+    <button id="no">No 🙈</button>
+  </div>
+</div>
+
+<div id="celebration">
+  <h1>You said YES 💕🎆</h1>
+  <p>I love you ❤️</p>
+  <img src="me.jpg" alt="Us kissing">
+</div>
+
+<audio id="music" src="music.mp3"></audio>
+
+<script>
+/* Hearts */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.innerHTML = Math.random() > 0.5 ? "💖" : "✨";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = Math.random() * 30 + 15 + "px";
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 7000);
+}, 250);
+
+/* NO button escapes (mouse + touch) */
+const no = document.getElementById("no");
+function moveNo() {
+  no.style.left = Math.random() * (window.innerWidth - 120) + "px";
+  no.style.top = Math.random() * (window.innerHeight - 120) + "px";
+}
+no.addEventListener("mouseenter", moveNo);
+no.addEventListener("touchstart", moveNo);
+
+/* YES click */
+const yes = document.getElementById("yes");
+const celebration = document.getElementById("celebration");
+const music = document.getElementById("music");
+
+yes.addEventListener("click", () => {
+  celebration.style.display = "block";
+  music.play();
+  startFireworks();
+});
+
+/* Fireworks */
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+function startFireworks() {
+  setInterval(() => {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height * 0.5;
+    for (let i = 0; i < 80; i++) {
+      ctx.beginPath();
+      ctx.arc(
+        x + Math.random() * 80 - 40,
+        y + Math.random() * 80 - 40,
+        Math.random() * 3 + 1,
+        0,
+        Math.PI * 2
+      );
+      ctx.fillStyle = `hsl(${Math.random() * 360},100%,60%)`;
+      ctx.fill();
+    }
+  }, 250);
+}
+</script>
+
+</body>
+</html>
