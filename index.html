@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rachel ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --pink: #ff4d6d;
+  --gold: #ffd166;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #ffafbd, #ffc3a0, #ffdde1);
+  overflow: hidden;
+  font-family: 'Playfair Display', serif;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* particles background */
+.particle {
+  position: absolute;
+  animation: rise 8s linear infinite;
+  z-index: 0;
+}
+
+@keyframes rise {
+  from { transform: translateY(110vh) rotate(0); opacity: 1; }
+  to { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* screens */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.hidden { display: none; }
+
+.card {
+  background: rgba(255,255,255,0.25);
+  backdrop-filter: blur(14px);
+  border-radius: 30px;
+  padding: 40px 30px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(255,77,109,0.4);
+}
+
+h1 {
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(2.4rem, 6vw, 3.8rem);
+  color: white;
+  text-shadow: 0 0 20px var(--pink);
+}
+
+.buttons {
+  position: relative;
+  height: 200px;
+  margin-top: 30px;
+}
+
+button {
+  border: none;
+  border-radius: 60px;
+  padding: 16px 42px;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+
+.yes {
+  background: linear-gradient(135deg, var(--pink), var(--gold));
+  color: white;
+  animation: heartbeat 1.4s infinite;
+  box-shadow: 0 0 30px rgba(255,77,109,0.8);
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  25% { transform: scale(1.15); }
+  50% { transform: scale(1); }
+  75% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+#no {
+  background: white;
+  color: var(--pink);
+  position: absolute;
+  top: 120px;
+  left: 20%;
+}
+
+/* celebration */
+#celebration {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle, #000 20%, #111);
+  z-index: 10;
+  color: white;
+  text-align: center;
+  padding-top: 60px;
+}
+
+#celebration img {
+  width: 75%;
+  max-width: 280px;
+  border-radius: 25px;
+  box-shadow: 0 0 60px var(--pink);
+  animation: reveal 1.5s ease forwards;
+}
+
+@keyframes reveal {
+  from { transform: scale(0) rotate(-10deg); opacity: 0; }
+  to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+#celebration h2 {
+  font-family: 'Pacifico', cursive;
+  font-size: 2.8rem;
+  color: var(--gold);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fx"></canvas>
+
+<!-- INTRO -->
+<div class="screen" id="intro">
+  <div class="card">
+    <h1>Do you miss me? 💭❤️</h1>
+    <div class="buttons">
+      <button class="yes" onclick="startExperience()">Yes ❤️</button>
+      <button class="yes" onclick="startExperience()">Yes 💋</button>
+      <button class="yes" onclick="startExperience()">Yes 😘</button>
+    </div>
+  </div>
+</div>
+
+<!-- VALENTINE -->
+<div class="screen hidden" id="valentine">
+  <div class="card">
+    <h1>Rachel 💖<br>Will you be my Valentine?</h1>
+    <div class="buttons">
+      <button class="yes" id="yesFinal">Yes 💍</button>
+      <button id="no">No 🙈</button>
+    </div>
+  </div>
+</div>
+
+<!-- FINAL -->
+<div id="celebration">
+  <h2>You said YES 💕✨</h2>
+  <p>My heart is yours ❤️</p>
+  <img src="me.jpg">
+</div>
+
+<audio id="music" src="music.mp3"></audio>
+
+<script>
+/* floating background */
+setInterval(() => {
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.innerHTML = Math.random() > 0.5 ? "💖" : "✨";
+  p.style.left = Math.random() * 100 + "vw";
+  p.style.fontSize = Math.random() * 28 + 14 + "px";
+  document.body.appendChild(p);
+  setTimeout(() => p.remove(), 8000);
+}, 220);
+
+/* music */
+const music = document.getElementById("music");
+music.volume = 0;
+
+function fadeInMusic() {
+  music.play();
+  const fade = setInterval(() => {
+    if (music.volume < 1) music.volume += 0.03;
+    else clearInterval(fade);
+  }, 100);
+}
+
+/* intro */
+function startExperience() {
+  document.getElementById("intro").classList.add("hidden");
+  document.getElementById("valentine").classList.remove("hidden");
+  fadeInMusic();
+}
+
+/* NO escape */
+const no = document.getElementById("no");
+function escapeNo() {
+  no.style.left = Math.random() * (innerWidth - 120) + "px";
+  no.style.top = Math.random() * (innerHeight - 120) + "px";
+}
+no.addEventListener("mouseenter", escapeNo);
+no.addEventListener("touchstart", escapeNo);
+
+/* ===============================
+   ADVANCED FIREWORK ENGINE
+=============================== */
+
+const canvas = document.getElementById("fx");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+window.addEventListener("resize", () => {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+});
+
+let fireworks = [];
+let particles = [];
+
+class Firework {
+  constructor(x, targetY) {
+    this.x = x;
+    this.y = canvas.height;
+    this.targetY = targetY;
+    this.speed = 6;
+    this.exploded = false;
+  }
+  update() {
+    this.y -= this.speed;
+    if (this.y <= this.targetY && !this.exploded) {
+      this.exploded = true;
+      explode(this.x, this.y);
+    }
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 2, 0, Math.PI * 2);
+    ctx.fillStyle = "white";
+    ctx.fill();
+  }
+}
+
+class Particle {
+  constructor(x, y, color) {
+    this.x = x;
+    this.y = y;
+    this.radius = Math.random() * 2 + 1;
+    this.color = color;
+    this.angle = Math.random() * Math.PI * 2;
+    this.speed = Math.random() * 6 + 2;
+    this.gravity = 0.05;
+    this.alpha = 1;
+    this.decay = Math.random() * 0.015 + 0.01;
+    this.vx = Math.cos(this.angle) * this.speed;
+    this.vy = Math.sin(this.angle) * this.speed;
+  }
+  update() {
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    this.alpha -= this.decay;
+  }
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    ctx.fillStyle = this.color;
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function explode(x, y) {
+  const color = `hsl(${Math.random() * 360},100%,60%)`;
+  for (let i = 0; i < 140; i++) {
+    particles.push(new Particle(x, y, color));
+  }
+}
+
+function launchFirework() {
+  fireworks.push(
+    new Firework(
+      Math.random() * canvas.width,
+      Math.random() * canvas.height * 0.4 + 100
+    )
+  );
+}
+
+function animateFireworks() {
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  fireworks.forEach((f, i) => {
+    f.update();
+    f.draw();
+    if (f.exploded) fireworks.splice(i, 1);
+  });
+
+  particles.forEach((p, i) => {
+    p.update();
+    p.draw();
+    if (p.alpha <= 0) particles.splice(i, 1);
+  });
+
+  requestAnimationFrame(animateFireworks);
+}
+
+function startFireworks() {
+  setInterval(launchFirework, 600);
+  animateFireworks();
+}
+
+/* FINAL YES */
+document.getElementById("yesFinal").addEventListener("click", () => {
+  document.getElementById("celebration").style.display = "block";
+  if (navigator.vibrate) navigator.vibrate([200,100,200]);
+  startFireworks();
+});
+</script>
+
+</body>
+</html>
